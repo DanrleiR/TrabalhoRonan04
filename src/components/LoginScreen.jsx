@@ -81,6 +81,11 @@ const styles = StyleSheet.create({
     height: 190,
     borderRadius: 15
   },
+  image2: {
+    width: 50,
+    height: 50,
+    borderRadius: 15
+  },
 });
 
 export default LoginScreen;
