@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextInput, StyleSheet } from 'react-native';
 
-const TextInputComponent = ({ type, placeholder, value, onChangeText }) => {
+const TextInputComponent = ({ type, placeholder, value, onChangeText, senha }) => {
   return (
     <TextInput
       style={styles.input}
@@ -9,6 +9,7 @@ const TextInputComponent = ({ type, placeholder, value, onChangeText }) => {
       keyboardType={type === 'email' ? 'email-address' : 'default'}
       value={value}
       onChangeText={onChangeText}
+      secureTextEntry={senha}
     />
   );
 };

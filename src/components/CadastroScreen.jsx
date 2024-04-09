@@ -3,6 +3,7 @@ import { Image, View, Text, StyleSheet } from 'react-native';
 import PressableComponent from './PressableComponent';
 import TextInputComponent from './TextInputComponent';
 import CategoryComponent from './CategoryComponent';
+import { Button } from 'react-native-web';
 
 const CadastroScreen = () => {
   const [nome, setNome] = useState('');
@@ -10,6 +11,7 @@ const CadastroScreen = () => {
   const [senha, setSenha] = useState('');
   const [categoria, setCategoria] = useState('');
   const categorias = ['Aluno', 'Professor'];
+  const [mostraSenha, setMostraSenha] = useState(true);
 
   const handleCadastro = () => {
     console.log('Nome:', nome);
@@ -18,13 +20,20 @@ const CadastroScreen = () => {
     console.log('Categoria:', categoria);
   };
 
+  const MostraSenha1 = () => {
+    setMostraSenha(!mostraSenha);
+  };
+
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/sistema.jpg')} style={styles.image1}></Image>
+      <Image source={require('../../assets/sistema.jpg')} style={styles.image1} />
       <Text style={styles.title}>Cadastre-se</Text>
       <TextInputComponent type="default" placeholder="Nome" value={nome} onChangeText={setNome} />
-      <TextInputComponent type="email" placeholder="email@ifpr... ou email@estudantes.ifpr..." value={email} onChangeText={setEmail}/>
-      <TextInputComponent type="default" placeholder="Senha" secureTextEntry={true} value={senha} onChangeText={setSenha}/>
+      <TextInputComponent type="email" placeholder="email@ifpr... ou email@estudantes.ifpr..." value={email} onChangeText={setEmail} />
+      <TextInputComponent type="default" placeholder="Senha" senha={mostraSenha} value={senha} onChangeText={setSenha} />
+      <Button onPress={MostraSenha1}>
+        <Image source={require('../../assets/icon.png')} style={styles.image2} />
+      </Button>
       <CategoryComponent categoria={categoria} setCategoria={setCategoria} categorias={categorias} />
       <PressableComponent onPress={handleCadastro} type="dark" style={styles.button}>Cadastrar</PressableComponent>
     </View>
@@ -54,6 +63,11 @@ const styles = StyleSheet.create({
   image1: {
     width: 190,
     height: 190,
+    borderRadius: 15
+  },
+  image2: {
+    width: 100,
+    height: 100,
     borderRadius: 15
   }
 });

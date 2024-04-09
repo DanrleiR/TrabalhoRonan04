@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import TextInputComponent from './TextInputComponent';
 import PressableComponent from './PressableComponent';
+import { Button } from 'react-native-web';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [mostraSenha, setMostraSenha] = useState(true);
 
   const handleLogin = () => {
     if (!email.includes('@')) {
@@ -28,13 +30,20 @@ const LoginScreen = ({ navigation }) => {
     navigation.navigate('Mensagem');
   };
 
+  const MostraSenha1 = () => {
+    setMostraSenha(!mostraSenha);
+  };
+
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/sistema.jpg')} style={styles.image1}></Image>
       <Text style={styles.title}>Acesso ao Chat</Text>
       <Text style={styles.title2}>Use seu e-mail e senha cadastrados para acessar o painel de conversas</Text>
       <TextInputComponent type="email" placeholder="E-mail" value={email} onChangeText={setEmail} />
-      <TextInputComponent type="default" placeholder="Senha" secureTextEntry={true} value={senha} onChangeText={setSenha} />
+      <TextInputComponent type="default" placeholder="Senha" senha={mostraSenha} value={senha} onChangeText={setSenha} />
+      <Button onPress={MostraSenha1}>
+        <Image source={require('../../assets/icon.png')} style={styles.image2} />
+      </Button>
       <PressableComponent onPress={handleLogin} type="dark">Login</PressableComponent>
       <PressableComponent onPress={() => navigation.navigate('Cadastro')} type="dark">Criar Conta</PressableComponent>
     </View>
