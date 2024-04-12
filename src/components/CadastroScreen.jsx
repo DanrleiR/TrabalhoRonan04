@@ -4,6 +4,8 @@ import PressableComponent from './PressableComponent';
 import TextInputComponent from './TextInputComponent';
 import CategoryComponent from './CategoryComponent';
 import { Button } from 'react-native-web';
+import { db } from '../services/firebaseConf';
+import { collection, addDoc } from "firebase/firestore";
 
 const CadastroScreen = () => {
   const [nome, setNome] = useState('');
@@ -13,11 +15,38 @@ const CadastroScreen = () => {
   const categorias = ['Aluno', 'Professor'];
   const [mostraSenha, setMostraSenha] = useState(true);
 
-  const handleCadastro = () => {
+  async function handleCadastro  () {
+    if (!email.includes('@')) {
+      alert('Por favor, insira um e-mail válido.');
+      return;
+    }
+
+    if (!email.endsWith('@ifpr.edu.br') && !email.endsWith('@estudantes.ifpr.edu.br')) {
+      alert('Você deve usar um e-mail do IFPR ou estudante do IFPR.');
+      return;
+    }
+    if (senha.trim() === '') {
+      alert('Você deve preencher o campo senha!');
+      return; // Não permite senha em branco
+    }
+    try {
+      const docRef = await addDoc(collection(db, "usuarios"), {
+        nome,
+        email,
+        senha,
+        categoria
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+
     console.log('Nome:', nome);
     console.log('Email:', email);
     console.log('Senha:', senha);
     console.log('Categoria:', categoria);
+
+    navigation.navigate('Mensagem');
   };
 
   const MostraSenha1 = () => {
@@ -34,7 +63,7 @@ const CadastroScreen = () => {
       <Button onPress={MostraSenha1}>
         <Image source={require('../../assets/icon.png')} style={styles.image2} />
       </Button>
-      <CategoryComponent categoria={categoria} setCategoria={setCategoria} categorias={categorias} />
+      <CategoryComponent categoria={categoria} onChange={(e) => setCategoria(e)} categorias={categorias} />
       <PressableComponent onPress={handleCadastro} type="dark" style={styles.button}>Cadastrar</PressableComponent>
     </View>
   );

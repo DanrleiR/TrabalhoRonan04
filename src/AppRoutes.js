@@ -4,11 +4,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './src/components/LoginScreen';
 import MensagemScreen from './src/components/MensagemScreen';
 import CadastroScreen from './src/components/CadastroScreen';
-import {app, db} from './src/services/firebaseConf';
+import app from './src/services/firebaseConf';
+
 
 const Stack = createStackNavigator();
 
-const App = () => {
+const AppRoutes = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
@@ -20,4 +21,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default AppRoutes

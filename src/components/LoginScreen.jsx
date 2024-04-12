@@ -3,31 +3,35 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import TextInputComponent from './TextInputComponent';
 import PressableComponent from './PressableComponent';
 import { Button } from 'react-native-web';
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from '../services/firebaseConf';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [mostraSenha, setMostraSenha] = useState(true);
 
-  const handleLogin = () => {
-    if (!email.includes('@')) {
-      alert('Por favor, insira um e-mail válido.');
-      return;
-    }
+  async function handleLogin() {
 
-    if (!email.endsWith('@ifpr.edu.br') && !email.endsWith('@estudantes.ifpr.edu.br')) {
-      alert('Você deve usar um e-mail do IFPR ou estudante do IFPR.');
-      return;
-    }
-    if (senha.trim() === '') {
-      alert('Você deve preencher o campo senha!');
-      return; // Não permite senha em branco
-    }
+    const usuarios = collection(db, 'usuarios')
+    const q = query(usuarios, where("email", "==", email))
 
-    console.log('Email:', email);
-    console.log('Senha:', senha);
+    //console.log(q);
 
-    navigation.navigate('Mensagem');
+    const dados = await getDocs(q)
+    dados.forEach(dado =>{
+      console.log(dado.data())
+
+      if(dado.data().senha == senha){
+        navigation.navigate('Mensagem')
+      }else{
+        alert("Email ou senha incorreta");
+      }
+    })
+
+    //console.log('Email:', email);
+    //console.log('Senha:', senha);
+
   };
 
   const MostraSenha1 = () => {
@@ -39,13 +43,37 @@ const LoginScreen = ({ navigation }) => {
       <Image source={require('../../assets/sistema.jpg')} style={styles.image1}></Image>
       <Text style={styles.title}>Acesso ao Chat</Text>
       <Text style={styles.title2}>Use seu e-mail e senha cadastrados para acessar o painel de conversas</Text>
-      <TextInputComponent type="email" placeholder="E-mail" value={email} onChangeText={setEmail} />
-      <TextInputComponent type="default" placeholder="Senha" senha={mostraSenha} value={senha} onChangeText={setSenha} />
-      <Button onPress={MostraSenha1}>
-        <Image source={require('../../assets/icon.png')} style={styles.image2} />
+
+      <TextInputComponent
+        type="email"
+        placeholder="E-mail"
+        value={email}
+        onChangeText={setEmail}
+      />
+
+      <TextInputComponent
+        type="default"
+        placeholder="Senha"
+        senha={mostraSenha}
+        value={senha}
+        onChangeText={setSenha}
+      />
+
+      <Button onPress={MostraSenha1} style={styles.mostraSenha}>
+        {/*<Image source={require('../../assets/icon.png')} style={styles.image2} />*/}
+        <text>Mostrar senha</text>
       </Button>
-      <PressableComponent onPress={handleLogin} type="dark">Login</PressableComponent>
-      <PressableComponent onPress={() => navigation.navigate('Cadastro')} type="dark">Criar Conta</PressableComponent>
+      <PressableComponent
+        onPress={handleLogin}
+        type="dark">
+        Login
+      </PressableComponent>
+
+      <PressableComponent
+        onPress={() => navigation.navigate('Cadastro')}
+        type="dark">
+        Criar Conta
+      </PressableComponent>
     </View>
   );
 };
@@ -81,10 +109,9 @@ const styles = StyleSheet.create({
     height: 190,
     borderRadius: 15
   },
-  image2: {
-    width: 50,
-    height: 50,
-    borderRadius: 15
+  mostraSenha: {
+    fontSize: 30,
+    backgroundColor: '#ffffff',
   },
 });
 

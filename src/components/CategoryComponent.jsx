@@ -2,14 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
-const CategoryComponent = ({ categoria, setCategoria, categorias }) => {
+const CategoryComponent = ({ categoria, onChange, categorias }) => {
   return (
     <View style={styles.selectContainer}>
       <Text style={styles.selectLabel}>Selecione a categoria:</Text>
       <Picker
         selectedValue={categoria}
         style={styles.picker}
-        onValueChange={(itemValue, itemIndex) => setCategoria(itemValue)}>
+        onValueChange={onChange}>
         {categorias.map((cat, index) => (
           <Picker.Item label={cat} value={cat} key={index} />
         ))}
